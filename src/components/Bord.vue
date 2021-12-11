@@ -56,13 +56,22 @@ export default class Bord extends Vue {
     return false;
   }
 
-  private getConsecutiveNum(PosX: number, PosY: number, dirX: number, dirY: number): number {
+  private getConsecutiveNum(
+    PosX: number,
+    PosY: number,
+    dirX: number,
+    dirY: number
+  ): number {
     let ret = 0;
     const mathState = this.map[PosY][PosX];
     for (;;) {
       PosX += dirX;
       PosY += dirY;
-      if (!(PosX < WIDTH && PosX >= 0) || !(PosY < HEIGHT && PosY >= 0) || this.map[PosY][PosX] !== mathState) {
+      if (
+        !(PosX < WIDTH && PosX >= 0) ||
+        !(PosY < HEIGHT && PosY >= 0) ||
+        this.map[PosY][PosX] !== mathState
+      ) {
         break;
       }
       ret++;
@@ -70,7 +79,12 @@ export default class Bord extends Vue {
     return ret;
   }
 
-  private isVictory(PosX: number, PosY: number, dirX: number, dirY: number): boolean {
+  private isVictory(
+    PosX: number,
+    PosY: number,
+    dirX: number,
+    dirY: number
+  ): boolean {
     let consecutiveNum = 1;
     consecutiveNum += this.getConsecutiveNum(PosX, PosY, dirX, dirY);
     consecutiveNum += this.getConsecutiveNum(PosX, PosY, dirX * -1, dirY * -1);
@@ -81,31 +95,36 @@ export default class Bord extends Vue {
   }
 
   private checkVertical(position: CoordinatesPosition): boolean {
-    return (this.isVictory(position.x, position.y, 0, 1))
+    return this.isVictory(position.x, position.y, 0, 1);
   }
 
   private checkHorizontal(position: CoordinatesPosition): boolean {
-    return (this.isVictory(position.x, position.y, 1, 0))
+    return this.isVictory(position.x, position.y, 1, 0);
   }
 
   private checkDiagonalNegative(position: CoordinatesPosition): boolean {
-    return (this.isVictory(position.x, position.y, 1, 1))
+    return this.isVictory(position.x, position.y, 1, 1);
   }
 
   private checkDiagonalPositive(position: CoordinatesPosition): boolean {
-    return (this.isVictory(position.x, position.y, 1, -1))
+    return this.isVictory(position.x, position.y, 1, -1);
   }
 
   private isFinishGame(position: CoordinatesPosition): boolean {
-    if (this.checkVertical(position) || this.checkHorizontal(position) || this.checkDiagonalPositive(position) || this.checkDiagonalNegative(position)) {
+    if (
+      this.checkVertical(position) ||
+      this.checkHorizontal(position) ||
+      this.checkDiagonalPositive(position) ||
+      this.checkDiagonalNegative(position)
+    ) {
       this.finishGame = "FINISH";
     } else if (this.termCount === HEIGHT * WIDTH) {
       this.finishGame = "DRAW";
     }
     if (this.finishGame === "CONTINUE") {
-      return (false)
+      return false;
     }
-    return (true);
+    return true;
   }
 
   private onSelected(position: CoordinatesPosition): void {
