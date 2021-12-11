@@ -5,14 +5,6 @@
         <Coin :math-stat="math" @selected="onSelected({ x: x, y: y })"> </Coin>
       </label>
     </div>
-    <button @click="reset">リセット</button>
-    <div v-if="finishGame === 'FINISH'" class="bord__result">
-      player {{ playerX + 1 }}: winner
-    </div>
-    <div v-else-if="finishGame === 'DRAW'" class="bord__result">
-      引き分けです。
-    </div>
-    <div v-else class="bord__player">player {{ playerX + 1 }}のターンです</div>
   </div>
 </template>
 
@@ -22,10 +14,10 @@ import {
   WIDTH,
   HEIGHT,
   CONSECUTIVE_MAX,
-  PLAYER_MAX,
   GameState,
 } from "@/utils/constants";
 import { CoordinatesPosition } from "@/utils/models";
+import { Emit, Prop } from "vue-property-decorator";
 import Coin from "@/components/Coin.vue"; // @ is an alias to /src
 
 @Options({
@@ -34,23 +26,13 @@ import Coin from "@/components/Coin.vue"; // @ is an alias to /src
   },
 })
 export default class Bord extends Vue {
-  private map: number[][] = new Array(HEIGHT);
-  private termCount = 0;
-  private playerX = 0;
-  private finishGame: GameState = "CONTINUE";
-
-  mounted(): void {
-    for (let i = 0; i < HEIGHT; i++) {
-      this.map[i] = new Array(WIDTH).fill(-1);
-    }
-    return;
-  }
+  @Prop() map!: number[][];
+  @Prop() gameState!: GameState;
+  @Prop() player!: number;
+  @Prop() termCount!: number;
 
   private canPutCoin(position: CoordinatesPosition): boolean {
-    if (
-      position.y === HEIGHT - 1 ||
-      this.map[position.y + 1][position.x] !== -1
-    ) {
+    if (position.y === HEIGHT - 1 || this.map[position.y + 1][position.x] !== -1) {
       return true;
     }
     return false;
@@ -110,43 +92,33 @@ export default class Bord extends Vue {
     return this.isVictory(position.x, position.y, 1, -1);
   }
 
-  private isFinishGame(position: CoordinatesPosition): boolean {
+  private getGameState(position: CoordinatesPosition): string {
     if (
       this.checkVertical(position) ||
       this.checkHorizontal(position) ||
       this.checkDiagonalPositive(position) ||
       this.checkDiagonalNegative(position)
     ) {
-      this.finishGame = "FINISH";
-    } else if (this.termCount === HEIGHT * WIDTH) {
-      this.finishGame = "DRAW";
+      return "FINISH"
+    } else if (this.termCount === (HEIGHT * WIDTH - 1)) {
+      return "DRAW"
     }
-    if (this.finishGame === "CONTINUE") {
-      return false;
-    }
-    return true;
+    return "CONTINUE";
   }
 
   private onSelected(position: CoordinatesPosition): void {
-    if (this.finishGame !== "CONTINUE" || !this.canPutCoin(position)) {
+    if (this.gameState !== "CONTINUE" || !this.canPutCoin(position)) {
       return;
     }
-    this.termCount++;
-    this.map[position.y][position.x] = this.playerX;
-    if (!this.isFinishGame(position)) {
-      this.playerX = this.termCount % PLAYER_MAX;
+    this.map[position.y][position.x] = this.player;
+    const gameState = this.getGameState(position);
+    if (gameState !== "CONTINUE") {
+      this.$emit("finished", gameState);
+      return ;
     }
-  }
-
-  private reset() {
-    this.termCount = 0;
-    this.playerX = 0;
-    this.finishGame = "CONTINUE";
-    for (let y = 0; y < HEIGHT; y++) {
-      for (let x = 0; x < WIDTH; x++) {
-        this.map[y][x] = -1;
-      }
-    }
+    this.$emit("incrementTerm");
+    console.log(this.termCount);
+    return;
   }
 }
 </script>
