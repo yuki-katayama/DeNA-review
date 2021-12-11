@@ -1,0 +1,22 @@
+button {
+	padding: 10px;
+	margin: 5px;
+}
+
+.coin {
+	&__brank {
+		background: #FFFFFF;
+	}
+	&__user1 {
+		background: #0000FF;
+	}
+	&__user2 {
+		background: #FF0000;
+	}
+	&__user3 {
+		background: #FFFF00;
+	}
+	&__user4 {
+		background: #00FFFF;
+	}
+}
