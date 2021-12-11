@@ -15,6 +15,7 @@ import {
   HEIGHT,
   CONSECUTIVE_MAX,
   GameState,
+  GameMode
 } from "@/utils/constants";
 import { CoordinatesPosition } from "@/utils/models";
 import { Emit, Prop } from "vue-property-decorator";
@@ -30,6 +31,7 @@ export default class Bord extends Vue {
   @Prop() gameState!: GameState;
   @Prop() player!: number;
   @Prop() termCount!: number;
+  @Prop() gameMode!: GameMode;
 
   private canPutCoin(position: CoordinatesPosition): boolean {
     if (position.y === HEIGHT - 1 || this.map[position.y + 1][position.x] !== -1) {
@@ -106,18 +108,48 @@ export default class Bord extends Vue {
     return "CONTINUE";
   }
 
+  private bot() {
+    let rowIdx = 0;
+    let columnIdx = HEIGHT - 1;
+    for(;;) {
+      rowIdx = Math.floor( Math.random() * WIDTH );
+      if (this.map[0][rowIdx] === -1) {
+        break
+      }
+    }
+    for(;;columnIdx--) {
+      if (this.map[columnIdx][rowIdx] === -1 && columnIdx === HEIGHT - 1) {
+        break
+      }
+      if (this.map[columnIdx][rowIdx] === -1 && this.map[columnIdx + 1][rowIdx] !== -1) {
+        break
+      }
+    }
+    return ({x: rowIdx, y: columnIdx});
+  }
+
   private onSelected(position: CoordinatesPosition): void {
     if (this.gameState !== "CONTINUE" || !this.canPutCoin(position)) {
       return;
     }
-    this.map[position.y][position.x] = this.player;
+    this.defineGameState(position)
+    if (this.gameState === "CONTINUE" && this.gameMode === "SOLO") {
+      const position = this.bot();
+      this.defineGameState(position, true)
+    }
+  }
+
+  private defineGameState(position: CoordinatesPosition, isBot?: boolean): void {
+    if (isBot)
+      this.map[position.y][position.x] = this.player + 1;
+    else
+      this.map[position.y][position.x] = this.player;
     const gameState = this.getGameState(position);
     if (gameState !== "CONTINUE") {
       this.$emit("finished", gameState);
       return ;
     }
     this.$emit("incrementTerm");
-    console.log(this.termCount);
     return;
   }
 }

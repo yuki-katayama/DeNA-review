@@ -2,9 +2,9 @@
   <div class="home">
     <div class="title">４目並べ</div>
     <div class="battle-mode">
-      <button type="button" disabled="true">1人</button>
+      <button type="button" @click="start('SOLO')">1人</button>
       <br />
-      <button type="button" @click="start()">2人</button>
+      <button type="button" @click="start('OFFLINE')">2人</button>
       <br />
       <button type="button" disabled="true">オンライン対戦</button>
     </div>
@@ -21,8 +21,8 @@ import Bord from "@/components/Bord.vue"; // @ is an alias to /src
   },
 })
 export default class HomeView extends Vue {
-  private start() {
-    this.$router.push({ path: "/game" });
+  private start(mode: string) {
+    this.$router.push({ path: "/game" , query: { mode: mode}});
   }
 }
 </script>
