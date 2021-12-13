@@ -5,6 +5,25 @@
   </div>
   <router-view />
 </template>
+<script lang="ts">
+import { PlayerDataService } from "@/service/PlayerDataService";
+import { Vue } from "vue-class-component";
+import { uuid } from "uuidv4";
+import store from "store";
+
+export default class App extends Vue {
+  mounted(): void {
+    let playerDataService = new PlayerDataService('http://localhost:8081')
+    let userId = store.get("userId");
+    if (userId === undefined) {
+      userId = uuid();
+      store.set("userId", userId);
+    }
+    this.$store.commit("SetPlayerDataService", playerDataService);
+    this.$store.commit("SetUser", {id: userId});
+  }
+}
+</script>
 
 <style>
 #app {

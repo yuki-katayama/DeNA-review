@@ -4,4 +4,4 @@ export const CONSECUTIVE_MAX = 4;
 export const PLAYER_MAX = 2;
 
 export type GameState = "CONTINUE" | "FINISH" | "DRAW";
-export type GameMode = "SOLO" | "OFFLINE" | "ONLINE"
+export type GameMode = "SOLO" | "OFFLINE" | "ONLINE";

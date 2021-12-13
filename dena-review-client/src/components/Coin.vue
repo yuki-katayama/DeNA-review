@@ -1,11 +1,21 @@
 <template>
-  <button v-if="mathStat === -1" class="coin__brank" @click="selected()">
+  <button
+    v-if="mathStat === -1"
+    class="coin__brank"
+    @click="selected()"
+  >
     {{ 5 }}
   </button>
-  <button v-else-if="mathStat === 0" class="coin__user1">
+  <button
+    v-else-if="mathStat === 0"
+    class="coin__user1"
+  >
     {{ mathStat }}
   </button>
-  <button v-else-if="mathStat === 1" class="coin__user2">
+  <button
+    v-else-if="mathStat === 1"
+    class="coin__user2"
+  >
     {{ mathStat }}
   </button>
 </template>

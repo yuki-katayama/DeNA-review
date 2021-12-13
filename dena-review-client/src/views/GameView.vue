@@ -1,12 +1,14 @@
 <template>
   <div class="game">
-	<Bord :map="map"
-        :game-state="gameState"
-        :player="player()"
-        :term-count="termCount"
-        :game-mode="gameMode"
-        @incrementTerm="onIncrementTerm()"
-        @finished="onFinished($event)"/>
+    <Bord
+      :map="map"
+      :game-state="gameState"
+      :player="player()"
+      :term-count="termCount"
+      :game-mode="gameMode"
+      @incrementTerm="onIncrementTerm()"
+      @finished="onFinished($event)"
+    />
     <button @click="reset">リセット</button>
     <div v-if="gameState === 'FINISH'" class="bord__result">
       player {{ player() + 1 }}: winner
@@ -25,10 +27,10 @@ import {
   HEIGHT,
   GameState,
   GameMode,
-  PLAYER_MAX
+  PLAYER_MAX,
 } from "@/utils/constants";
-import { CoordinatesPosition } from "@/utils/models";
-import Bord from "@/components/Bord.vue"; // @ is an alias to /src
+import { User } from "@/utils/models";
+import Bord from "@/components/Bord.vue";
 
 @Options({
   components: {
@@ -36,11 +38,11 @@ import Bord from "@/components/Bord.vue"; // @ is an alias to /src
   },
 })
 export default class Game extends Vue {
-	private map: number[][] = new Array(HEIGHT);
+  private map: number[][] = new Array(HEIGHT);
   private gameState: GameState = "CONTINUE";
   private playerX = 0;
   private termCount = 0;
-  private gameMode: GameMode | "" = "";
+  private gameMode = "";
 
   mounted(): void {
     this.gameMode = this.$route.query.mode!.toString() as GameMode;
@@ -50,7 +52,7 @@ export default class Game extends Vue {
     return;
   }
 
-  private onIncrementTerm():void {
+  private onIncrementTerm(): void {
     this.termCount++;
   }
 

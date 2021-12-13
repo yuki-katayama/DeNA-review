@@ -1,8 +1,17 @@
 <template>
   <div class="bord">
-    <div v-for="(column, y) in map" :key="y">
-      <label v-for="(math, x) in column" :key="x">
-        <Coin :math-stat="math" @selected="onSelected({ x: x, y: y })"> </Coin>
+    <div
+      v-for="(column, y) in map"
+      :key="y"
+    >
+      <label
+        v-for="(math, x) in column"
+        :key="x"
+      >
+        <Coin
+          :math-stat="math"
+          @selected="onSelected({ x: x, y: y })"
+        />
       </label>
     </div>
   </div>
@@ -15,7 +24,7 @@ import {
   HEIGHT,
   CONSECUTIVE_MAX,
   GameState,
-  GameMode
+  GameMode,
 } from "@/utils/constants";
 import { CoordinatesPosition } from "@/utils/models";
 import { Emit, Prop } from "vue-property-decorator";
@@ -34,7 +43,10 @@ export default class Bord extends Vue {
   @Prop() gameMode!: GameMode;
 
   private canPutCoin(position: CoordinatesPosition): boolean {
-    if (position.y === HEIGHT - 1 || this.map[position.y + 1][position.x] !== -1) {
+    if (
+      position.y === HEIGHT - 1 ||
+      this.map[position.y + 1][position.x] !== -1
+    ) {
       return true;
     }
     return false;
@@ -101,9 +113,9 @@ export default class Bord extends Vue {
       this.checkDiagonalPositive(position) ||
       this.checkDiagonalNegative(position)
     ) {
-      return "FINISH"
-    } else if (this.termCount === (HEIGHT * WIDTH - 1)) {
-      return "DRAW"
+      return "FINISH";
+    } else if (this.termCount === HEIGHT * WIDTH - 1) {
+      return "DRAW";
     }
     return "CONTINUE";
   }
@@ -111,43 +123,47 @@ export default class Bord extends Vue {
   private bot() {
     let rowIdx = 0;
     let columnIdx = HEIGHT - 1;
-    for(;;) {
-      rowIdx = Math.floor( Math.random() * WIDTH );
+    for (;;) {
+      rowIdx = Math.floor(Math.random() * WIDTH);
       if (this.map[0][rowIdx] === -1) {
-        break
+        break;
       }
     }
-    for(;;columnIdx--) {
+    for (; ; columnIdx--) {
       if (this.map[columnIdx][rowIdx] === -1 && columnIdx === HEIGHT - 1) {
-        break
+        break;
       }
-      if (this.map[columnIdx][rowIdx] === -1 && this.map[columnIdx + 1][rowIdx] !== -1) {
-        break
+      if (
+        this.map[columnIdx][rowIdx] === -1 &&
+        this.map[columnIdx + 1][rowIdx] !== -1
+      ) {
+        break;
       }
     }
-    return ({x: rowIdx, y: columnIdx});
+    return { x: rowIdx, y: columnIdx };
   }
 
   private onSelected(position: CoordinatesPosition): void {
     if (this.gameState !== "CONTINUE" || !this.canPutCoin(position)) {
       return;
     }
-    this.defineGameState(position)
+    this.defineGameState(position);
     if (this.gameState === "CONTINUE" && this.gameMode === "SOLO") {
       const position = this.bot();
-      this.defineGameState(position, true)
+      this.defineGameState(position, true);
     }
   }
 
-  private defineGameState(position: CoordinatesPosition, isBot?: boolean): void {
-    if (isBot)
-      this.map[position.y][position.x] = this.player + 1;
-    else
-      this.map[position.y][position.x] = this.player;
+  private defineGameState(
+    position: CoordinatesPosition,
+    isBot?: boolean
+  ): void {
+    if (isBot) this.map[position.y][position.x] = this.player + 1;
+    else this.map[position.y][position.x] = this.player;
     const gameState = this.getGameState(position);
     if (gameState !== "CONTINUE") {
       this.$emit("finished", gameState);
-      return ;
+      return;
     }
     this.$emit("incrementTerm");
     return;

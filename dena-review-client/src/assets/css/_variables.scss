@@ -1,0 +1,13 @@
+$color-background-main: hsl(0, 0%, 100%);
+$color-background-shadow: #efefef;
+$color-background-secondary: #d8d8d8;
+$color-background-black-transparent: #00000054;
+
+
+$font-size-big: 18px;
+
+@mixin flexcenter() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
