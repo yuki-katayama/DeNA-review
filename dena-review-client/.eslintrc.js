@@ -4,13 +4,13 @@ module.exports = {
     node: true,
   },
   extends: [
+    'plugin:vue/vue3-recommended',
     "plugin:vue/vue3-essential",
-    "eslint:recommended",
-    "@vue/typescript/recommended",
-    "@vue/prettier",
-    "@vue/prettier/@typescript-eslint",
+    "plugin:vue/base",
   ],
+  parser: "vue-eslint-parser",
   parserOptions: {
+    "parser": "@typescript-eslint/parser",
     ecmaVersion: 2020,
   },
   rules: {
