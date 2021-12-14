@@ -1,5 +1,10 @@
 import { model, Schema, Types } from "mongoose";
 
+export interface CoordinatesPosition {
+	x: number;
+	y: number;
+  }
+
 export interface Role {
 	id: string;
 	name: string;
@@ -71,7 +76,7 @@ const UserRoomSchema = new Schema(
 			trim: true,
 			required: true,
 		  },
-		  userId: {
+		userId: {
 			type: String,
 			trim: true,
 			required: true,

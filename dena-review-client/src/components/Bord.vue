@@ -10,6 +10,7 @@
       >
         <Coin
           :math-stat="math"
+          :my-term="myTerm"
           @selected="onSelected({ x: x, y: y })"
         />
       </label>
@@ -31,6 +32,7 @@ import Coin from "@/components/Coin.vue"; // @ is an alias to /src
 })
 export default class Bord extends Vue {
   @Prop() map!: number[][];
+  @Prop() myTerm!: boolean;
 
   private onSelected(position: CoordinatesPosition): void {
     this.$emit('onSelected', position);

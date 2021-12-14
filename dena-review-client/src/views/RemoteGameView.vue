@@ -1,19 +1,21 @@
 <template>
   <div class="game">
     <h1>{{roomName}}</h1>
+	<div>あなたの色 {{color}}</div>
     <button class="tool-button" @click=leaveRoom()>部屋を退出する</button>
     <Bord
       :map="map"
+	  :my-term="myTerm"
       @onSelected="onSelected($event)"
     />
     <button @click="reset">リセット</button>
     <div v-if="gameState === 'FINISH'" class="bord__result">
-      {{dispPlayer()}}: winner
+      {{resultDispPlayer()}}: winner
     </div>
     <div v-else-if="gameState === 'DRAW'" class="bord__result">
       引き分けです。
     </div>
-    <div v-else class="bord__player">player {{ dispPlayer() }}のターンです</div>
+    <div v-else class="game__player">player {{ dispPlayer() }}のターンです</div>
   </div>
 </template>
 
@@ -38,16 +40,19 @@ import { bot } from "@/utils/bot"; // @ is an alias to /src
     Bord,
   },
 })
-export default class Game extends Vue {
+export default class RemoteGameView extends Vue {
   private dataServiceRef: PlayerDataService = <any>{}; //dummy
   private map: number[][] = new Array(HEIGHT);
   private gameState: GameState = "CONTINUE";
-  private myTerm = true;
+  private myTerm = false;
   private gameMode = "";
   private roomName = "";
   private userRoomStates: UserRoomState[] = [];
+  private secondPlayer = false;
+  private color = "赤";
 
   mounted(): void {
+	  console.log("adwadwa");
     this.gameMode = this.$route.query.mode!.toString() as GameMode;
     for (let i = 0; i < HEIGHT; i++) {
       this.map[i] = new Array(WIDTH).fill(-1);
@@ -56,34 +61,58 @@ export default class Game extends Vue {
     this.dataServiceRef = this.$store.state.playerDataService;
     this.dataServiceRef.onConnected(() => this.getDataFromDataServer(this.roomName));
     this.dataServiceRef.onUserJoinRoom((userRoomStates: UserRoomState[]) => this.onUserJoinRoom(userRoomStates));
+    this.dataServiceRef.onSecondUserJoinRoom(() => this.onSecondUserJoinRoom());
+	this.dataServiceRef.onUserFinish(() => this.onUserFinish());
+    this.dataServiceRef.onUserPutCoin((position: CoordinatesPosition) => this.onUserPutCoin(position));
     return;
+  }
+  private onUserPutCoin(position: CoordinatesPosition) {
+	  if (this.myTerm === false) {
+		  if (this.secondPlayer) {
+			  this.map[position.y][position.x] = 1;
+		  } else {
+			  this.map[position.y][position.x] = 0;
+		  }
+	  }
+	  this.myTerm = !this.myTerm;
+  }
+  private onUserJoinRoom(userRoomStates: UserRoomState[]) {
+	this.userRoomStates = userRoomStates;
+	console.log(this.userRoomStates);
+	this.myTerm = false;
+  }
+
+  private onSecondUserJoinRoom(): void {
+	  this.color = "青"
+	  this.secondPlayer = true;
+	  this.myTerm = true;
   }
 
   private onSelected(position: CoordinatesPosition): void {
-    this.onDefineGameState(position)
+    this.defineGameState(position)
   }
 
-  private onDefineGameState(position: CoordinatesPosition): void {
+  private onUserFinish(): void {
+	  this.gameState = "FINISH"
+  }
+
+  private defineGameState(position: CoordinatesPosition): void {
     if (this.gameState !== "CONTINUE" || !canPutCoin(this.map, position)) {
       return;
     }
-    if (this.myTerm) {
+    if (this.secondPlayer) {
       this.map[position.y][position.x] = 0;
     } else {
       this.map[position.y][position.x] = 1;
     }
     this.gameState = getGameState(this.map, position)
     if (this.gameState !== "CONTINUE") {
-      this.$emit("finished", this.gameState);
-      return;
+		this.dataServiceRef.emitPutCoin(position);
+		this.dataServiceRef.emitFinish();
     } else {
-      this.nextTerm()
+		this.dataServiceRef.emitPutCoin(position);
     }
     return;
-  }
-
-  private nextTerm() {
-    this.myTerm = !this.myTerm
   }
 
   private leaveRoom() {
@@ -95,13 +124,13 @@ export default class Game extends Vue {
     this.dataServiceRef.emitJoinRoom(roomName);
   }
 
-  private onUserJoinRoom(userRoomStates: UserRoomState[])
-  {
-    this.userRoomStates = userRoomStates;
-  }
-
   private dispPlayer(): string {
     return (this.myTerm) ? "あなた" : "相手"
+  }
+
+  /* putOnCoinしてからresultなので、逆にしないといけない */
+  private resultDispPlayer(): string {
+    return (this.myTerm) ? "相手" : "あなた"
   }
 
   private reset(): void {
@@ -112,11 +141,6 @@ export default class Game extends Vue {
         this.map[y][x] = -1;
       }
     }
-  }
-
-  private onFinished(event: GameState): void {
-    this.myTerm = true;
-    this.gameState = event;
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { DataService } from "./DataService";
-import { Room, UserRoomState } from "../utils/models"
+import { CoordinatesPosition, Room, UserRoomState } from "../utils/models"
 
 export class PlayerDataService extends DataService {
 	//  ------------- LISTEN ------------
@@ -14,6 +14,18 @@ export class PlayerDataService extends DataService {
 	public onUserLeaveRoom(callback: (numPlayer: number) => void): void {
 		this.socketRef.on("user leave room", (numPlayer: number) => callback(numPlayer))
 	}
+
+	public onSecondUserJoinRoom(callback: () => void): void {
+		this.socketRef.on("second user join room", () => callback())
+	}
+
+	public onUserPutCoin(callback: (position: CoordinatesPosition) => void): void {
+		this.socketRef.on("user put coin", (position: CoordinatesPosition) => callback(position))
+	}
+
+	public onUserFinish(callback: () => void): void {
+		this.socketRef.on("user finish", () => callback())
+	}
 	//  ------------- EMIT --------------
 	public emitAccessedUser(userId: string): void {
 		this.socketRef.emit("accessed user", userId);
@@ -26,5 +38,11 @@ export class PlayerDataService extends DataService {
 	}
 	public emitLeaveRoom(): void {
 		this.socketRef.emit("leave room");
+	}
+	public emitPutCoin(position: CoordinatesPosition): void {
+		this.socketRef.emit("put coin", position);
+	}
+	public emitFinish(): void {
+		this.socketRef.emit("finish");
 	}
 }

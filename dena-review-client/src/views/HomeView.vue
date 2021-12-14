@@ -68,7 +68,6 @@ export default class HomeView extends Vue {
   }
 
   private onUpdateRoomsState(roomsState: Room[]): void {
-    console.log(roomsState);
     this.roomsState = roomsState;
   }
 

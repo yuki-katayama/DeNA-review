@@ -2,6 +2,7 @@
   <button
     v-if="mathStat === -1"
     class="coin__brank"
+    :disabled="!myTerm"
     @click="selected()"
   >
     {{ 5 }}
@@ -26,6 +27,7 @@ import { Emit, Prop } from "vue-property-decorator";
 
 export default class Coin extends Vue {
   @Prop() mathStat!: number;
+  @Prop() myTerm!: boolean;
   @Emit()
   selected(): void {
     return;

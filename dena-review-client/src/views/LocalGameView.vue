@@ -71,8 +71,7 @@ export default class LocalGameView extends Vue {
     }
     this.gameState = getGameState(this.map, position)
     if (this.gameState !== "CONTINUE") {
-      this.$emit("finished", this.gameState);
-      return;
+      this.myTerm = true;
     } else {
       this.nextTerm()
     }
@@ -112,11 +111,6 @@ export default class LocalGameView extends Vue {
         this.map[y][x] = -1;
       }
     }
-  }
-
-  private onFinished(event: GameState): void {
-    this.myTerm = true;
-    this.gameState = event;
   }
 }
 </script>
