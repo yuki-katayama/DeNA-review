@@ -1,21 +1,46 @@
 <template>
-  <popup @close="hidePopup" :is-visible="isVisible" :on-enter="addRoom" :init="init">
-    <template v-slot:header>部屋の追加</template>
-    <template v-slot:body-vertical>
+  <popup
+    :is-visible="isVisible"
+    :on-enter="addRoom"
+    :init="init"
+    @close="hidePopup"
+  >
+    <template #header>
+      部屋の追加
+    </template>
+    <template #body-vertical>
       <div class="popup__popup-dropdown">
         <span class="popup__popup-dropdown--title">部屋の名前</span>
-        <input ref="popupInputRef" v-model="newRoomName" :placeholder="'部屋の名前'" @keyup.enter="onNewRoomInputEnterClick()" class="home-settings-modal__info-input--server" @input="parseNewRoomInput()" />
+        <input
+          ref="popupInputRef"
+          v-model="newRoomName"
+          :placeholder="'部屋の名前'"
+          class="home-settings-modal__info-input--server"
+          @keyup.enter="onNewRoomInputEnterClick()"
+          @input="parseNewRoomInput()"
+        >
       </div>
 
-      <div class="error" v-if="addingRoomErrorMessage !== ''">
+      <div
+        v-if="addingRoomErrorMessage !== ''"
+        class="error"
+      >
         {{ addingRoomErrorMessage }}
       </div>
     </template>
-    <template v-slot:footer>
-      <button class="popup__popup-button" @click="hidePopup()">
+    <template #footer>
+      <button
+        class="popup__popup-button"
+        @click="hidePopup()"
+      >
         キャンセル
       </button>
-      <button class="popup__popup-button button--orange" @click="addRoom()" :disabled="!isNewRoomReadyToAdd" v-bind:class="{ 'zawa-button--disabled': !isNewRoomReadyToAdd }">
+      <button
+        class="popup__popup-button button--orange"
+        :disabled="!isNewRoomReadyToAdd"
+        :class="{ 'zawa-button--disabled': !isNewRoomReadyToAdd }"
+        @click="addRoom()"
+      >
         部屋を追加する
       </button>
     </template>

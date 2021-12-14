@@ -1,21 +1,39 @@
 <template>
   <div class="game">
-    <h1>{{roomName}}</h1>
-	<div>あなたの色 {{color}}</div>
-    <button class="tool-button" @click=leaveRoom()>部屋を退出する</button>
+    <h1>{{ roomName }}</h1>
+    <div>あなたの色 {{ color }}</div>
+    <button
+      class="tool-button"
+      @click="leaveRoom()"
+    >
+      部屋を退出する
+    </button>
     <Bord
       :map="map"
-	  :my-term="myTerm"
+      :my-term="myTerm"
       @onSelected="onSelected($event)"
     />
-    <button @click="reset">リセット</button>
-    <div v-if="gameState === 'FINISH'" class="bord__result">
-      {{resultDispPlayer()}}: winner
+    <button @click="reset">
+      リセット
+    </button>
+    <div
+      v-if="gameState === 'FINISH'"
+      class="bord__result"
+    >
+      {{ resultDispPlayer() }}: winner
     </div>
-    <div v-else-if="gameState === 'DRAW'" class="bord__result">
+    <div
+      v-else-if="gameState === 'DRAW'"
+      class="bord__result"
+    >
       引き分けです。
     </div>
-    <div v-else class="game__player">player {{ dispPlayer() }}のターンです</div>
+    <div
+      v-else
+      class="game__player"
+    >
+      player {{ dispPlayer() }}のターンです
+    </div>
   </div>
 </template>
 

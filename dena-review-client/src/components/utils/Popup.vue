@@ -2,17 +2,25 @@
   <div class="popup">
     <div class="popup__container">
       <div class="popup__popup-header">
-        <span><slot name="header"></slot></span>
-        <div class="close-button" @click="close">&nbsp;</div>
+        <span><slot name="header" /></span>
+        <div
+          class="close-button"
+          @click="close"
+        >
+&nbsp;
+        </div>
       </div>
       <div class="popup__popup-body">
-        <slot name="body"></slot>
+        <slot name="body" />
       </div>
       <div class="popup__popup-body popup__popup-body--vertical">
-        <slot name="body-vertical"></slot>
+        <slot name="body-vertical" />
       </div>
-      <div class="popup__footer" v-bind:class="{ 'popup__footer--hidden': hideFooter }">
-        <slot name="footer"></slot>
+      <div
+        class="popup__footer"
+        :class="{ 'popup__footer--hidden': hideFooter }"
+      >
+        <slot name="footer" />
       </div>
     </div>
   </div>

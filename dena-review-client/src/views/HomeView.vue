@@ -1,32 +1,62 @@
 <template>
   <div class="home">
-    <div class="title">４目並べ</div>
+    <div class="title">
+      ４目並べ
+    </div>
     <div class="battle-mode">
-      <button class="tool-button" @click="start('SOLO', 'BOTと対戦')">BOTと対戦</button>
-      <br />
-      <button class="tool-button" @click="start('OFFLINE', '2人で対戦')">2人で対戦</button>
-      <br />
-      <button class="tool-button" @click="showAddModal()">オンライン対戦</button>
+      <button
+        class="tool-button"
+        @click="start('SOLO', 'BOTと対戦')"
+      >
+        BOTと対戦
+      </button>
+      <br>
+      <button
+        class="tool-button"
+        @click="start('OFFLINE', '2人で対戦')"
+      >
+        2人で対戦
+      </button>
+      <br>
+      <button
+        class="tool-button"
+        @click="showAddModal()"
+      >
+        オンライン対戦
+      </button>
     </div>
     <div class="rooms">
       対戦する部屋を選択してください
-      <div v-for="(room, i) in roomsState"
-      :key="i"
-      class="rooms">
-        <button class="tool-button" @click="clickedRoom(room.id)">{{room.name}}</button>
+      <div
+        v-for="(room, i) in roomsState"
+        :key="i"
+        class="rooms"
+      >
+        <button
+          class="tool-button"
+          @click="clickedRoom(room.id)"
+        >
+          {{ room.name }}
+        </button>
       </div>
     </div>
-    <button class="tool-button"
-      v-bind:class="{ 'tool-button--disabled': !canJoin }"
+    <button
+      class="tool-button"
+      :class="{ 'tool-button--disabled': !canJoin }"
       :disabled="!canJoin"
-      @click="start('ONLINE')">参加する</button>
+      @click="start('ONLINE')"
+    >
+      参加する
+    </button>
 
-    <AddRoomPopup v-show="isAddModalVisible" @close="hideAddModal"
-    :data-service-ref="dataServiceRef"
-    :rooms="roomsState"
-    :is-visible="isAddModalVisible" />
+    <AddRoomPopup
+      v-show="isAddModalVisible"
+      :data-service-ref="dataServiceRef"
+      :rooms="roomsState"
+      :is-visible="isAddModalVisible"
+      @close="hideAddModal"
+    />
   </div>
-
 </template>
 
 <script lang="ts">
