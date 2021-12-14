@@ -1,6 +1,11 @@
 # dena-review
 
-## Project setup
+## サーバー
+MongoDBを使用しています。
+https://github.com/yuki-katayama/dena-review-server
+
+## アプリの実行方法
+### Project setup
 ```
 yarn install
 ```
