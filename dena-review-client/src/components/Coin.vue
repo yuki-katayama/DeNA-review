@@ -5,19 +5,16 @@
     :disabled="!myTerm"
     @click="selected()"
   >
-    {{ 5 }}
   </button>
   <button
     v-else-if="mathStat === 0"
     class="coin__user1"
   >
-    {{ mathStat }}
   </button>
   <button
     v-else-if="mathStat === 1"
     class="coin__user2"
   >
-    {{ mathStat }}
   </button>
 </template>
 

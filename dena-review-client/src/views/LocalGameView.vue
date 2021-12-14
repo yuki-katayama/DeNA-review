@@ -9,6 +9,7 @@
     </button>
     <Bord
       :map="map"
+      :my-term="(gameMode === 'OFFLINE') ? true : myTerm"
       @onSelected="onSelected($event)"
     />
     <button @click="reset">
