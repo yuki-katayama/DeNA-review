@@ -7,7 +7,7 @@ import RemoteGameView from "../views/RemoteGameView.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
+    name: "HomeView",
     component: HomeView,
   },
   {
