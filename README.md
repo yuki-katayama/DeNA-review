@@ -1,4 +1,4 @@
-# dena-review-client
+# dena-review
 
 ## Project setup
 ```
