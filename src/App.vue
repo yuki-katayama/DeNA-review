@@ -9,7 +9,7 @@ import store from "store";
 
 export default class App extends Vue {
   mounted(): void {
-    let playerDataService = new PlayerDataService('http://localhost:8081')
+    let playerDataService = new PlayerDataService('https://dena-review.herokuapp.com/')
     let userId = store.get("userId");
     if (userId === undefined) {
       userId = uuid();
