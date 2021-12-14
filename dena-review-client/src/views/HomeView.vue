@@ -2,9 +2,9 @@
   <div class="home">
     <div class="title">４目並べ</div>
     <div class="battle-mode">
-      <button class="tool-button" @click="start('SOLO')">1人</button>
+      <button class="tool-button" @click="start('SOLO', 'BOTと対戦')">BOTと対戦</button>
       <br />
-      <button class="tool-button" @click="start('OFFLINE')">2人</button>
+      <button class="tool-button" @click="start('OFFLINE', '2人で対戦')">2人で対戦</button>
       <br />
       <button class="tool-button" @click="showAddModal()">オンライン対戦</button>
     </div>
@@ -86,11 +86,11 @@ export default class HomeView extends Vue {
     }
   }
 
-  private start(mode: string) {
+  private start(mode: string, roomName?: string) {
     if (mode === "ONLINE") {
-      this.$router.push({ path: "/game" , query: { mode: mode, roomName: this.selectedRoom!.name}});
+      this.$router.push({ path: "/remote" , query: { mode: mode, roomName: this.selectedRoom!.name}});
     } else {
-      this.$router.push({ path: "/game" , query: { mode: mode}});
+      this.$router.push({ path: "/local" , query: { mode: mode, roomName: roomName}});
     }
   }
 

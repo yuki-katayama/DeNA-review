@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import GameView from "../views/GameView.vue";
+import LocalGameView from "../views/LocalGameView.vue";
+import RemoteGameView from "../views/RemoteGameView.vue";
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -9,9 +11,14 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView,
   },
   {
-    path: "/game",
-    name: "Game",
-    component: GameView,
+    path: "/local",
+    name: "LocalGameViewGame",
+    component: LocalGameView,
+  },
+  {
+    path: "/remote",
+    name: "RemoteGameViewGame",
+    component: RemoteGameView,
   },
 ];
 
