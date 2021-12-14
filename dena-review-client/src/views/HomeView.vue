@@ -2,17 +2,25 @@
   <div class="home">
     <div class="title">４目並べ</div>
     <div class="battle-mode">
-      <button type="button" @click="start('SOLO')">1人</button>
+      <button class="tool-button" @click="start('SOLO')">1人</button>
       <br />
-      <button type="button" @click="start('OFFLINE')">2人</button>
+      <button class="tool-button" @click="start('OFFLINE')">2人</button>
       <br />
-      <button type="button" @click="showAddModal()">オンライン対戦</button>
+      <button class="tool-button" @click="showAddModal()">オンライン対戦</button>
     </div>
-    <div v-for="(room, i) in roomsState"
-    :key="i"
-    class="rooms">
-    {{room.name}}
+    <div class="rooms">
+      対戦する部屋を選択してください
+      <div v-for="(room, i) in roomsState"
+      :key="i"
+      class="rooms">
+        <button class="tool-button" @click="clickedRoom(room.id)">{{room.name}}</button>
+      </div>
     </div>
+    <button class="tool-button"
+      v-bind:class="{ 'tool-button--disabled': !canJoin }"
+      :disabled="!canJoin"
+      @click="start('ONLINE')">参加する</button>
+
     <AddRoomPopup v-show="isAddModalVisible" @close="hideAddModal"
     :data-service-ref="dataServiceRef"
     :rooms="roomsState"
@@ -41,21 +49,26 @@ export default class HomeView extends Vue {
   private dataServiceRef: PlayerDataService = <any>{}; //dummy
   private isAddModalVisible = false;
   private roomsState: Room[] = [];
+  private selectedRoomId = "";
+  private canJoin = false;
 
   private get userId(): string {
     return this.$store.state.user.id;
+  }
+
+  private get selectedRoom(): Room | undefined {
+    return this.roomsState.find((r) => r.id === this.selectedRoomId);
   }
 
   mounted(): void {
     this.dataServiceRef = this.$store.state.playerDataService
     this.dataServiceRef.onceConnected(() => this.getDataFromDataServer());
     this.dataServiceRef.onUpdateRoomsState((roomsState: Room[]) => this.onUpdateRoomsState(roomsState));
-    // this.dataServiceRef.emitAddRoom(() => this.onAddRoom());
     return ;
   }
 
-  /* ---- Event ----*/
   private onUpdateRoomsState(roomsState: Room[]): void {
+    console.log(roomsState);
     this.roomsState = roomsState;
   }
 
@@ -66,10 +79,21 @@ export default class HomeView extends Vue {
   private hideAddModal(): void {
     this.isAddModalVisible = false;
   }
+  private clickedRoom(roomId: string): void {
+    this.selectedRoomId = roomId;
+    if(this.selectedRoom) {
+      this.canJoin = true
+    }
+  }
 
   private start(mode: string) {
-    this.$router.push({ path: "/game" , query: { mode: mode}});
+    if (mode === "ONLINE") {
+      this.$router.push({ path: "/game" , query: { mode: mode, roomName: this.selectedRoom!.name}});
+    } else {
+      this.$router.push({ path: "/game" , query: { mode: mode}});
+    }
   }
+
   private getDataFromDataServer(): void{
     this.dataServiceRef.emitAccessedUser(this.userId);
   }

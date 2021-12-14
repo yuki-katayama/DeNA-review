@@ -1,5 +1,6 @@
 <template>
   <div class="game">
+    <button class="tool-button" @click=leaveRoom()>部屋を退出する</button>
     <Bord
       :map="map"
       :game-state="gameState"
@@ -29,7 +30,8 @@ import {
   GameMode,
   PLAYER_MAX,
 } from "@/utils/constants";
-import { User } from "@/utils/models";
+import { PlayerDataService } from "@/service/PlayerDataService"
+import { User, Room, UserRoomState } from "@/utils/models";
 import Bord from "@/components/Bord.vue";
 
 @Options({
@@ -38,18 +40,40 @@ import Bord from "@/components/Bord.vue";
   },
 })
 export default class Game extends Vue {
+  private dataServiceRef: PlayerDataService = <any>{}; //dummy
   private map: number[][] = new Array(HEIGHT);
   private gameState: GameState = "CONTINUE";
   private playerX = 0;
   private termCount = 0;
   private gameMode = "";
+  private userRoomStates: UserRoomState[] = [];
 
   mounted(): void {
     this.gameMode = this.$route.query.mode!.toString() as GameMode;
     for (let i = 0; i < HEIGHT; i++) {
       this.map[i] = new Array(WIDTH).fill(-1);
     }
+    if (this.gameMode === 'ONLINE') {
+      const roomName = this.$route.query.roomName!.toString();
+      this.dataServiceRef = this.$store.state.playerDataService;
+      this.dataServiceRef.onConnected(() => this.getDataFromDataServer(roomName));
+      this.dataServiceRef.onUserJoinRoom((userRoomStates: UserRoomState[]) => this.onUserJoinRoom(userRoomStates));
+    }
     return;
+  }
+
+  private leaveRoom() {
+    this.dataServiceRef.emitLeaveRoom();
+    this.$router.push({ path: "/"});
+  }
+
+  private getDataFromDataServer(roomName: string) {
+    this.dataServiceRef.emitJoinRoom(roomName);
+  }
+
+  private onUserJoinRoom(userRoomStates: UserRoomState[])
+  {
+    this.userRoomStates = userRoomStates;
   }
 
   private onIncrementTerm(): void {

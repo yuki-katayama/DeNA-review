@@ -1,2 +1,18 @@
+@import "./_variables.scss";
+.tool-button {
+	background: $main-color;
+    color: #fff;
+
+    height: 50px;
+    width: 380px;
+    font-weight: 700;
+    margin: 25px;
+    font-size: 18px;
+    border-radius: 10px;
+	&--disabled {
+		background: $color-background-secondary;
+	}
+}
+
 .battle-mode button {
 }

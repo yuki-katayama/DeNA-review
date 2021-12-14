@@ -24,6 +24,16 @@ export class DataService {
     }
   }
   //  ------------- LISTEN --------------
+  public onConnected(callback: () => void): void {
+    if (this.socketRef.connected) {
+      callback();
+    }
+    this.socketRef.on("connect", () => {
+      console.log("connected to data server: ", this.url);
+      callback();
+    });
+  }
+
   public onceConnected(callback: () => void): void {
     if (this.socketRef.connected) {
       callback();

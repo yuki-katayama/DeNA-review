@@ -1,11 +1,12 @@
 import express from "express";
 import { initSyncService } from "./sync.service";
 import { DEFAULT_PORT } from "./constants";
-import cors from "cors";
-
+import { initDenadb } from "./denadb";
 const PORT = process.env.PORT || DEFAULT_PORT;
 
 async function initializeServer() {
+	await initDenadb();
+
 	const app = express()
 	app.get('/', (req, res) => {
 		res.sendFile(__dirname + "/index.html")

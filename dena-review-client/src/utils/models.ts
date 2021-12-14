@@ -4,8 +4,10 @@ export interface CoordinatesPosition {
 }
 
 export interface UserRoomState {
-	userId: string;
 	roomId: string;
+	userId: string;
+	socketId: string;
+	roomName: string;
 }
 
 export interface User {

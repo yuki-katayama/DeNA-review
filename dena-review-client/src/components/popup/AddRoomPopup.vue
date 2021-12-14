@@ -64,11 +64,10 @@ export default class AddRoomPopup extends Vue {
 
   private addRoom(): void {
     if (this.isNewRoomReadyToAdd) {
-		console.log("wadaw");
-
       const convertedRoomName = this.getConvertedRoomName();
       this.dataServiceRef.emitAddRoom(convertedRoomName);
       this.hidePopup();
+	  this.$router.push({ path: "/game" , query: { mode: 'ONLINE', roomName: convertedRoomName}});
     }
   }
 
