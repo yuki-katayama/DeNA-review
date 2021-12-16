@@ -87,11 +87,12 @@ export default class AddRoomPopup extends Vue {
     this.addRoom();
   }
 
-  private addRoom(): void {
+  private async addRoom(): Promise<void> {
     if (this.isNewRoomReadyToAdd) {
       const convertedRoomName = this.getConvertedRoomName();
       this.dataServiceRef.emitAddRoom(convertedRoomName);
-      this.hidePopup();
+      this.hidePopup(),
+      await new Promise(resolve => setTimeout(resolve, 3000)) // 1秒待つ
       this.$router.push({ path: "/remote" , query: { mode: 'ONLINE', roomName: convertedRoomName}});
     }
   }
