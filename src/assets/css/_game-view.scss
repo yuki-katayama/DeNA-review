@@ -1,0 +1,13 @@
+.game {
+	display: block;
+	width: 1000px;
+	margin-left:25%;
+	.bord {
+		&__player {
+			font-size: 40px;
+		}
+		&__result {
+			font-size: 40px;
+		}
+	}
+}
