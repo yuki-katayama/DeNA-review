@@ -1,7 +1,7 @@
 <template>
   <div class="game">
     <h1>{{ roomName }}</h1>
-    <div>あなたの色 {{ color }}</div>
+    <h2>あなたの色 {{ color }}</h2>
     <button
       class="tool-button"
       @click="leaveRoom()"
@@ -32,7 +32,7 @@
       v-else
       class="game__player"
     >
-      player {{ dispPlayer() }}のターンです
+      {{ dispPlayer() }}のターンです
     </div>
   </div>
 </template>
@@ -125,10 +125,10 @@ export default class RemoteGameView extends Vue {
     }
     this.gameState = getGameState(this.map, position)
     if (this.gameState !== "CONTINUE") {
-		this.dataServiceRef.emitPutCoin(position);
-		this.dataServiceRef.emitFinish();
+		  this.dataServiceRef.emitPutCoin(position);
+		  this.dataServiceRef.emitFinish();
     } else {
-		this.dataServiceRef.emitPutCoin(position);
+		  this.dataServiceRef.emitPutCoin(position);
     }
     return;
   }
@@ -150,21 +150,11 @@ export default class RemoteGameView extends Vue {
   private resultDispPlayer(): string {
     return (this.myTerm) ? "相手" : "あなた"
   }
-
-  private reset(): void {
-    this.myTerm = true;
-    this.gameState = "CONTINUE";
-    for (let y = 0; y < HEIGHT; y++) {
-      for (let x = 0; x < WIDTH; x++) {
-        this.map[y][x] = -1;
-      }
-    }
-  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-.game {
-}
+@import "../assets/css/_utils.scss";
+@import "../assets/css/_game-view.scss";
 </style>

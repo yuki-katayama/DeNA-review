@@ -5,9 +5,3 @@ $color-background-black-transparent: #00000054;
 $main-color: #2f455c;
 
 $font-size-big: 18px;
-
-@mixin flexcenter() {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

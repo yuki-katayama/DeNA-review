@@ -14,8 +14,8 @@
         <input
           ref="popupInputRef"
           v-model="newRoomName"
-          :placeholder="'部屋の名前'"
-          class="home-settings-modal__info-input--server"
+          :placeholder="'部屋の名前を入力してください'"
+          class="popup__popup-dropdown--input"
           @keyup.enter="onNewRoomInputEnterClick()"
           @input="parseNewRoomInput()"
         >
@@ -36,7 +36,7 @@
         キャンセル
       </button>
       <button
-        class="popup__popup-button button--orange"
+        class="popup__popup-button"
         :disabled="!isNewRoomReadyToAdd"
         :class="{ 'zawa-button--disabled': !isNewRoomReadyToAdd }"
         @click="addRoom()"

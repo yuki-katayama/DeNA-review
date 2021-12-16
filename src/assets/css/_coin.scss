@@ -1,6 +1,8 @@
 button {
 	padding: 10px;
 	margin: 5px;
+	width: 100px;
+    height: 100px ;
 }
 
 .coin {
@@ -12,11 +14,5 @@ button {
 	}
 	&__user2 {
 		background: #FF0000;
-	}
-	&__user3 {
-		background: #FFFF00;
-	}
-	&__user4 {
-		background: #00FFFF;
 	}
 }

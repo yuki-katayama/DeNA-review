@@ -1,6 +1,7 @@
 <template>
   <div class="game">
     <h1>{{ roomName }}</h1>
+    <h2>あなたの色 青</h2>
     <button
       class="tool-button"
       @click="leaveRoom()"
@@ -31,7 +32,7 @@
       v-else
       class="bord__player"
     >
-      player {{ dispPlayer() }}のターンです
+      {{ dispPlayer() }}のターンです
     </div>
   </div>
 </template>
@@ -89,9 +90,7 @@ export default class LocalGameView extends Vue {
       this.map[position.y][position.x] = 1;
     }
     this.gameState = getGameState(this.map, position)
-    if (this.gameState !== "CONTINUE") {
-      this.myTerm = true;
-    } else {
+    if (this.gameState === "CONTINUE") {
       this.nextTerm()
     }
     return;
@@ -136,6 +135,7 @@ export default class LocalGameView extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-.game {
-}
+@import "../assets/css/_utils.scss";
+@import "../assets/css/_game-view.scss";
+
 </style>

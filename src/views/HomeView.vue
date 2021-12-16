@@ -130,5 +130,5 @@ export default class HomeView extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "../assets/css/_home-view.scss";
+@import "../assets/css/_utils.scss";
 </style>
