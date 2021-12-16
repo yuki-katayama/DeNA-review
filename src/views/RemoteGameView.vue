@@ -30,7 +30,7 @@
     </div>
     <div
       v-else
-      class="game__player"
+      class="bord__player"
     >
       {{ dispPlayer() }}のターンです
     </div>
