@@ -13,7 +13,7 @@
       :my-term="myTerm"
       @onSelected="onSelected($event)"
     />
-    <button @click="reset">
+    <button class="tool-button" @click="dataServiceRef.emitReset()">
       リセット
     </button>
     <div
@@ -80,9 +80,23 @@ export default class RemoteGameView extends Vue {
     this.dataServiceRef.onConnected(() => this.getDataFromDataServer(this.roomName));
     this.dataServiceRef.onUserJoinRoom((userRoomStates: UserRoomState[]) => this.onUserJoinRoom(userRoomStates));
     this.dataServiceRef.onSecondUserJoinRoom(() => this.onSecondUserJoinRoom());
-	this.dataServiceRef.onUserFinish(() => this.onUserFinish());
+    this.dataServiceRef.onUserFinish(() => this.onUserFinish());
     this.dataServiceRef.onUserPutCoin((position: CoordinatesPosition) => this.onUserPutCoin(position));
+    this.dataServiceRef.onUserReset(() => this.onUserReset());
     return;
+  }
+  private onUserReset(): void {
+    if (this.secondPlayer) {
+      this.myTerm = true;
+    } else {
+      this.myTerm = false;
+    }
+    this.gameState = "CONTINUE";
+    for (let y = 0; y < HEIGHT; y++) {
+      for (let x = 0; x < WIDTH; x++) {
+        this.map[y][x] = -1;
+      }
+    }
   }
   private onUserPutCoin(position: CoordinatesPosition) {
 	  if (this.myTerm === false) {

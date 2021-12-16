@@ -23,6 +23,10 @@ export class PlayerDataService extends DataService {
 		this.socketRef.on("user put coin", (position: CoordinatesPosition) => callback(position))
 	}
 
+	public onUserReset(callback: () => void): void {
+		this.socketRef.on("user reset", () => callback())
+	}
+
 	public onUserFinish(callback: () => void): void {
 		this.socketRef.on("user finish", () => callback())
 	}
@@ -44,5 +48,8 @@ export class PlayerDataService extends DataService {
 	}
 	public emitFinish(): void {
 		this.socketRef.emit("finish");
+	}
+	public emitReset(): void {
+		this.socketRef.emit("reset");
 	}
 }

@@ -13,7 +13,7 @@
       :my-term="(gameMode === 'OFFLINE') ? true : myTerm"
       @onSelected="onSelected($event)"
     />
-    <button @click="reset">
+    <button class="tool-button" @click="reset">
       リセット
     </button>
     <div
