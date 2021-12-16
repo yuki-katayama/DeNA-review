@@ -30,6 +30,9 @@ export class PlayerDataService extends DataService {
 	public onUserFinish(callback: () => void): void {
 		this.socketRef.on("user finish", () => callback())
 	}
+	public onNotFoundRoom(callback: () => void): void {
+		this.socketRef.on("not found room", () => callback())
+	}
 	//  ------------- EMIT --------------
 	public emitAccessedUser(userId: string): void {
 		this.socketRef.emit("accessed user", userId);

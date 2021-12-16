@@ -70,7 +70,6 @@ export default class RemoteGameView extends Vue {
   private color = "赤";
 
   mounted(): void {
-	  console.log("adwadwa");
     this.gameMode = this.$route.query.mode!.toString() as GameMode;
     for (let i = 0; i < HEIGHT; i++) {
       this.map[i] = new Array(WIDTH).fill(-1);
@@ -83,7 +82,11 @@ export default class RemoteGameView extends Vue {
     this.dataServiceRef.onUserFinish(() => this.onUserFinish());
     this.dataServiceRef.onUserPutCoin((position: CoordinatesPosition) => this.onUserPutCoin(position));
     this.dataServiceRef.onUserReset(() => this.onUserReset());
+    this.dataServiceRef.onNotFoundRoom(() => this.onNotFoundRoom())
     return;
+  }
+  private onNotFoundRoom(): void {
+    this.$router.push({ path: "/"});
   }
   private onUserReset(): void {
     if (this.secondPlayer) {
